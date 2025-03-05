@@ -1,6 +1,16 @@
-import { Hono } from 'hono'
+import { Hono, Next } from 'hono'
+import { Context } from 'hono/jsx';
 
 const app = new Hono()
+
+app.use(async (c, next) => {
+  if (c.req.header("Authorization")) {
+    // Do validation
+    await next()
+  } else {
+    return c.text("You dont have acces");
+  }
+})
 
 app.get('/', (c) => {
   return c.text('Hello from cloudflare workers!')
